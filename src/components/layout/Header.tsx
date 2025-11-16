@@ -38,7 +38,7 @@ export function Header() {
         {/* User Menu */}
         <div className="flex items-center gap-4">
           <DropdownMenu>
-            <DropdownMenuTrigger asChild>
+            <DropdownMenuTrigger asChild data-tour="user-menu">
               <Button variant="ghost" className="gap-2">
                 <div className="flex h-8 w-8 items-center justify-center rounded-full bg-gradient-to-br from-blue-500 to-indigo-500 text-white font-semibold text-sm">
                   {userName.charAt(0).toUpperCase()}

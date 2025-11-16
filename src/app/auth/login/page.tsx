@@ -7,7 +7,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import Link from 'next/link';
 import { signIn } from '@/lib/auth/supabaseAuth';
 import { loginSchema, type LoginInput } from '@/lib/validators/auth.schema';
-import { Button } from '@/components/ui/button';
+import { LoadingButton } from '@/components/ui/loading-button';
 import { Input } from '@/components/ui/input';
 import {
   Card,
@@ -117,9 +117,14 @@ export default function LoginPage() {
               )}
             </div>
 
-            <Button type="submit" className="w-full" disabled={loading}>
-              {loading ? 'Signing in...' : 'Sign In'}
-            </Button>
+            <LoadingButton
+              type="submit"
+              className="w-full"
+              isLoading={loading}
+              loadingText="Signing in..."
+            >
+              Sign In
+            </LoadingButton>
           </form>
         </CardContent>
         <CardFooter className="flex flex-col space-y-2">

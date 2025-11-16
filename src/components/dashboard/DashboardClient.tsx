@@ -2,6 +2,8 @@
 
 import { AnimatedPage, AnimatedList, AnimatedListItem } from '@/components/ui/animated';
 import { useGlobalShortcuts } from '@/lib/hooks/useKeyboardShortcuts';
+import { OnboardingTour, useOnboarding } from '@/components/onboarding/OnboardingTour';
+import { dashboardTourSteps } from '@/components/onboarding/dashboard-tour';
 import { ProcessCard } from './ProcessCard';
 import { ProgressStats } from './ProgressStats';
 import { QuickActions } from './QuickActions';
@@ -32,11 +34,15 @@ export function DashboardClient({
   // Enable global keyboard shortcuts
   useGlobalShortcuts();
 
+  // Onboarding tour
+  const { showOnboarding, completeOnboarding, skipOnboarding } = useOnboarding('dashboard-onboarding-completed');
+
   return (
-    <AnimatedPage className="min-h-screen bg-gray-50">
+    <>
+      <AnimatedPage className="min-h-screen bg-gray-50">
       <div className="container mx-auto space-y-8 p-8">
         {/* Header Section */}
-        <div className="flex items-center justify-between">
+        <div className="flex items-center justify-between" data-tour="welcome">
           <div>
             <h1 className="text-4xl font-bold text-gray-900">
               Welcome back, {userName}! 👋
@@ -45,7 +51,7 @@ export function DashboardClient({
               Manage your EB-1A processes and track your progress
             </p>
           </div>
-          <Link href="/dashboard/process/new">
+          <Link href="/dashboard/process/new" data-tour="new-process">
             <Button size="lg" className="gap-2">
               <Plus className="h-5 w-5" />
               New Process
@@ -66,7 +72,7 @@ export function DashboardClient({
         <div className="grid gap-8 lg:grid-cols-3">
           {/* Processes Section */}
           <div className="lg:col-span-2">
-            <div className="space-y-6">
+            <div className="space-y-6" data-tour="process-list">
               <div className="flex items-center justify-between">
                 <h2 className="text-2xl font-bold text-gray-900">
                   My Processes
@@ -118,5 +124,14 @@ export function DashboardClient({
         </div>
       </div>
     </AnimatedPage>
+
+    {showOnboarding && (
+      <OnboardingTour
+        steps={dashboardTourSteps}
+        onComplete={completeOnboarding}
+        onSkip={skipOnboarding}
+      />
+    )}
+    </>
   );
 }
