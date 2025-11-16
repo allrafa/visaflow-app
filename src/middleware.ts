@@ -85,18 +85,18 @@ export async function middleware(request: NextRequest) {
     // Protect dashboard and other protected routes
     if (request.nextUrl.pathname.startsWith('/dashboard') || isProtectedRoute) {
       if (!user) {
-        return NextResponse.redirect(new URL('/login', request.url));
+        return NextResponse.redirect(new URL('/auth/login', request.url));
       }
     }
 
     // Redirect authenticated users away from auth pages
-    const authPages = ['/login', '/signup'];
+    const authPages = ['/auth/login', '/auth/signup'];
     const isAuthPage = authPages.some((page) =>
       request.nextUrl.pathname.startsWith(page)
     );
 
     if (isAuthPage && user) {
-      return NextResponse.redirect(new URL('/', request.url));
+      return NextResponse.redirect(new URL('/dashboard', request.url));
     }
 
     return response;
@@ -107,7 +107,7 @@ export async function middleware(request: NextRequest) {
     }
     // Para rotas protegidas, redirecionar para login
     if (request.nextUrl.pathname.startsWith('/dashboard')) {
-      return NextResponse.redirect(new URL('/login', request.url));
+      return NextResponse.redirect(new URL('/auth/login', request.url));
     }
     return response;
   }

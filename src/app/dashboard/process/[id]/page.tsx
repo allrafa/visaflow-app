@@ -17,7 +17,7 @@ export default async function ProcessDetailPage({
   try {
     user = await getAuthUser();
   } catch {
-    redirect('/login');
+    redirect('/auth/login');
   }
 
   const { id } = await params;

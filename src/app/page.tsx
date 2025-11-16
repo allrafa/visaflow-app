@@ -48,12 +48,12 @@ export default async function Home() {
         </p>
 
         <div className="flex gap-4 justify-center mt-8">
-          <Link href="/signup">
+          <Link href="/auth/signup">
             <Button size="lg" className="text-lg px-8">
               Get Started
             </Button>
           </Link>
-          <Link href="/login">
+          <Link href="/auth/login">
             <Button size="lg" variant="outline" className="text-lg px-8">
               Sign In
             </Button>

@@ -45,7 +45,7 @@ export function DashboardClient({
               Manage your EB-1A processes and track your progress
             </p>
           </div>
-          <Link href="/process/new">
+          <Link href="/dashboard/process/new">
             <Button size="lg" className="gap-2">
               <Plus className="h-5 w-5" />
               New Process
@@ -90,7 +90,7 @@ export function DashboardClient({
                       Get started by creating your first EB-1A process.
                       We'll guide you through every step!
                     </p>
-                    <Link href="/process/new">
+                    <Link href="/dashboard/process/new">
                       <Button size="lg" className="gap-2">
                         <Plus className="h-5 w-5" />
                         Create First Process

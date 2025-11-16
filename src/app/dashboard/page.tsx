@@ -14,7 +14,7 @@ export default async function DashboardPage() {
   try {
     user = await getAuthUser();
   } catch {
-    redirect('/login');
+    redirect('/auth/login');
   }
 
   // Buscar processos do usuário
@@ -51,7 +51,7 @@ export default async function DashboardPage() {
               Manage your EB-1A processes and track your progress
             </p>
           </div>
-          <Link href="/process/new">
+          <Link href="/dashboard/process/new">
             <Button size="lg" className="gap-2">
               <Plus className="h-5 w-5" />
               New Process
@@ -96,7 +96,7 @@ export default async function DashboardPage() {
                       Get started by creating your first EB-1A process.
                       We'll guide you through every step!
                     </p>
-                    <Link href="/process/new">
+                    <Link href="/dashboard/process/new">
                       <Button size="lg" className="gap-2">
                         <Plus className="h-5 w-5" />
                         Create First Process

@@ -16,7 +16,7 @@ export default async function FinalMeritsPage({
   try {
     user = await getAuthUser();
   } catch {
-    redirect('/login');
+    redirect('/auth/login');
   }
 
   const { processId } = await params;

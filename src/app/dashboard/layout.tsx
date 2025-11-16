@@ -13,7 +13,7 @@ export default async function DashboardLayout({
   try {
     await getAuthUser();
   } catch {
-    redirect('/login');
+    redirect('/auth/login');
   }
 
   return (

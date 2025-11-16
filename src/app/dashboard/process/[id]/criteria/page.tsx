@@ -18,7 +18,7 @@ export default async function CriteriaListPage({
   try {
     user = await getAuthUser();
   } catch {
-    redirect('/login');
+    redirect('/auth/login');
   }
 
   const { id: processId } = await params;

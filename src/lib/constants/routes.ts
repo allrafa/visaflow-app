@@ -7,7 +7,7 @@ export const ROUTES = {
   // Public routes
   HOME: '/',
   LOGIN: '/login',
-  SIGNUP: '/signup',
+  SIGNUP: '/auth/signup',
 
   // Dashboard routes
   DASHBOARD: '/dashboard',
