@@ -21,10 +21,13 @@ const sentryWebpackPluginOptions = {
   widenClientFileUpload: true,
 };
 
-// Export with Sentry wrapper (only in production)
-module.exports = process.env.NODE_ENV === 'production'
-  ? withSentryConfig(nextConfig, sentryWebpackPluginOptions)
-  : nextConfig;
+// Export without Sentry temporarily to debug Vercel build issue
+module.exports = nextConfig;
+
+// Uncomment when Sentry is configured:
+// module.exports = process.env.NODE_ENV === 'production'
+//   ? withSentryConfig(nextConfig, sentryWebpackPluginOptions)
+//   : nextConfig;
 
 
 
