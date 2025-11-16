@@ -14,7 +14,7 @@ interface ProfileFormProps {
 
 export function ProfileForm({ user }: ProfileFormProps) {
   const router = useRouter();
-  const toastContext = useToast();
+  const { addToast } = useToast();
   const [loading, setLoading] = useState(false);
 
   const [formData, setFormData] = useState({
@@ -40,17 +40,18 @@ export function ProfileForm({ user }: ProfileFormProps) {
       // Simulate API call
       await new Promise((resolve) => setTimeout(resolve, 1000));
 
-      toastContext.toast({
+      addToast({
+        type: 'success',
         title: 'Profile updated',
         description: 'Your profile has been updated successfully.',
       });
 
       router.refresh();
     } catch (error) {
-      toastContext.toast({
+      addToast({
+        type: 'error',
         title: 'Error',
         description: 'Failed to update profile. Please try again.',
-        variant: 'destructive',
       });
     } finally {
       setLoading(false);

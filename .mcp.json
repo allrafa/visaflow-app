@@ -75,6 +75,17 @@
       "continuousLoad": false,
       "watchLoad": false,
       "serverPersistent": false
+    },
+    "shadcn": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "shadcn@latest",
+        "mcp"
+      ],
+      "continuousLoad": false,
+      "watchLoad": false,
+      "serverPersistent": false
     }
   },
   "continuousLoad": false,

@@ -196,3 +196,4 @@ O `DATABASE_URL` atual usa Prisma Accelerate (`accelerate.prisma-data.net`), que
 
 
 
+

@@ -1,14 +1,14 @@
 'use client';
 
 import { useState, useMemo } from 'react';
-import { Task, Process } from '@/types/database';
+import { Task, Process, UpdateTaskInput } from '@/types/database';
 import { TasksBoard } from './TasksBoard';
 import { TaskFilter } from './TaskFilter';
 import { TaskSearch } from './TaskSearch';
 import { Button } from '@/components/ui/button';
 import { Plus } from 'lucide-react';
 import { updateTask } from '@/lib/api/tasks';
-import { toast } from '@/lib/hooks/useToast';
+import { useToast } from '@/lib/hooks/useToast';
 
 interface TasksPageClientProps {
   initialTasks: (Task & { processName: string })[];
@@ -16,6 +16,7 @@ interface TasksPageClientProps {
 }
 
 export function TasksPageClient({ initialTasks, processes }: TasksPageClientProps) {
+  const toastContext = useToast();
   const [tasks, setTasks] = useState(initialTasks);
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedProcess, setSelectedProcess] = useState('all');
@@ -44,7 +45,7 @@ export function TasksPageClient({ initialTasks, processes }: TasksPageClientProp
     });
   }, [tasks, searchQuery, selectedProcess, selectedStatus, selectedPriority]);
 
-  const handleTaskUpdate = async (taskId: string, updates: Partial<Task>) => {
+  const handleTaskUpdate = async (taskId: string, updates: UpdateTaskInput) => {
     try {
       // Optimistic update
       setTasks((prev) =>
@@ -54,14 +55,14 @@ export function TasksPageClient({ initialTasks, processes }: TasksPageClientProp
       // API call
       await updateTask(taskId, updates);
 
-      toast({
+      toastContext.toast({
         title: 'Task updated',
         description: 'The task has been updated successfully.',
       });
     } catch (error) {
       // Revert on error
       setTasks(initialTasks);
-      toast({
+      toastContext.toast({
         title: 'Error',
         description: 'Failed to update task. Please try again.',
         variant: 'destructive',

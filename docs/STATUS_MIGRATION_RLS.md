@@ -123,3 +123,4 @@ Para aplicar automaticamente no futuro, podemos:
 
 
 
+

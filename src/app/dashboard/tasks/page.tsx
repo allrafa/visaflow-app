@@ -16,9 +16,9 @@ export default async function TasksPage() {
 
   // Gather all tasks from all processes
   const allTasks = processes.flatMap((process) => {
-    return (process.tasks || []).map((task) => ({
+    return (process.tasks || []).map((task: any) => ({
       ...task,
-      processName: process.candidateName,
+      processName: process.candidateName || process.title,
     }));
   });
 

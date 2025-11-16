@@ -20,7 +20,7 @@ interface NotificationPreferences {
 }
 
 export function NotificationSettings({ user }: NotificationSettingsProps) {
-  const { toast } = useToast();
+  const toastContext = useToast();
   const [loading, setLoading] = useState(false);
   const [preferences, setPreferences] = useState<NotificationPreferences>({
     emailNotifications: true,
@@ -40,12 +40,12 @@ export function NotificationSettings({ user }: NotificationSettingsProps) {
       // TODO: Implement API call
       await new Promise((resolve) => setTimeout(resolve, 1000));
 
-      toast({
+      toastContext.toast({
         title: 'Preferences saved',
         description: 'Your notification preferences have been updated.',
       });
     } catch (error) {
-      toast({
+      toastContext.toast({
         title: 'Error',
         description: 'Failed to save preferences. Please try again.',
         variant: 'destructive',

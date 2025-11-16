@@ -34,7 +34,7 @@ export function TaskFilter({
             <SelectItem value="all">All Processes</SelectItem>
             {processes.map((process) => (
               <SelectItem key={process.id} value={process.id}>
-                {process.candidateName}
+                {process.candidateName || process.title}
               </SelectItem>
             ))}
           </SelectContent>

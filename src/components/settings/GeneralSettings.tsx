@@ -13,7 +13,7 @@ interface GeneralSettingsProps {
 }
 
 export function GeneralSettings({ user }: GeneralSettingsProps) {
-  const { toast } = useToast();
+  const { addToast } = useToast();
   const [loading, setLoading] = useState(false);
   const [language, setLanguage] = useState('en');
   const [timezone, setTimezone] = useState('UTC-5');
@@ -25,15 +25,16 @@ export function GeneralSettings({ user }: GeneralSettingsProps) {
       // TODO: Implement API call
       await new Promise((resolve) => setTimeout(resolve, 1000));
 
-      toast({
+      addToast({
+        type: 'success',
         title: 'Settings saved',
         description: 'Your preferences have been updated successfully.',
       });
     } catch (error) {
-      toast({
+      addToast({
+        type: 'error',
         title: 'Error',
         description: 'Failed to save settings. Please try again.',
-        variant: 'destructive',
       });
     } finally {
       setLoading(false);

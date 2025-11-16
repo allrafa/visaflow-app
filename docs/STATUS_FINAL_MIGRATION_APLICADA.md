@@ -172,3 +172,4 @@ Os scripts de verificação não funcionavam porque:
 
 
 
+
