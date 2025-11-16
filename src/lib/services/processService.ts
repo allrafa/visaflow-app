@@ -1,5 +1,6 @@
 import { prisma } from '../db/client';
 import { NotFoundError } from '../errors/AppError';
+import { seedDefaultTasks } from './taskSeedService';
 
 export type ProcessPhase =
   | 'ELIGIBILITY'
@@ -24,10 +25,10 @@ export interface UpdateProcessInput {
 }
 
 /**
- * Create a new process
+ * Create a new process with default tasks
  */
 export async function createProcess(input: CreateProcessInput) {
-  return prisma.process.create({
+  const process = await prisma.process.create({
     data: {
       userId: input.userId,
       title: input.title,
@@ -37,6 +38,11 @@ export async function createProcess(input: CreateProcessInput) {
       progress: 0,
     },
   });
+
+  // Seed default tasks for all phases
+  await seedDefaultTasks(process.id);
+
+  return process;
 }
 
 /**

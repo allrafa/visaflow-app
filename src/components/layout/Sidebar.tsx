@@ -29,31 +29,31 @@ const navigation: NavItem[] = [
   },
   {
     name: 'My Processes',
-    href: '/process',
+    href: '/dashboard/process',
     icon: FolderOpen,
     description: 'Manage EB-1A processes',
   },
   {
     name: 'Tasks',
-    href: '/tasks',
+    href: '/dashboard/tasks',
     icon: ListChecks,
     description: 'Track progress',
   },
   {
     name: 'Criteria',
-    href: '/criteria',
+    href: '/dashboard/criteria',
     icon: Award,
     description: '10 EB-1A criteria',
   },
   {
     name: 'Letters',
-    href: '/letters',
+    href: '/dashboard/letters',
     icon: Mail,
     description: 'Recommendation letters',
   },
   {
     name: 'Final Merits',
-    href: '/final-merits',
+    href: '/dashboard/final-merits',
     icon: FileText,
     description: 'Generate I-140',
   },
@@ -62,7 +62,7 @@ const navigation: NavItem[] = [
 const secondaryNavigation: NavItem[] = [
   {
     name: 'Help & Docs',
-    href: '/help',
+    href: '/dashboard/help',
     icon: HelpCircle,
   },
 ];
