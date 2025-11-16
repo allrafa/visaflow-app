@@ -1,0 +1,83 @@
+{
+  "mcpServers": {
+    "filesystem-visaflow": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "@modelcontextprotocol/server-filesystem",
+        "/Users/rafaraio/.cursor/projects/visaflow-app"
+      ],
+      "continuousLoad": false,
+      "watchLoad": false,
+      "serverPersistent": false
+    },
+    "memory": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "@modelcontextprotocol/server-memory"
+      ],
+      "continuousLoad": false,
+      "watchLoad": false,
+      "serverPersistent": false
+    },
+    "supabase": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "@supabase/mcp-server-supabase"
+      ],
+      "env": {
+        "SUPABASE_URL": "https://jsnvrhbeedkifqwmsumc.supabase.co",
+        "SUPABASE_ANON_KEY": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImpzbnZyaGJlZWRraWZxd21zdW1jIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjMwMTA3MDgsImV4cCI6MjA3ODU4NjcwOH0.3jSthfs15_EhkAo3rKoLnvcWE5I3Bxo5YjIPrquPCEc",
+        "SUPABASE_ACCESS_TOKEN": "sb_secret_l_xDjPHDTJ9H3ncgpogWFQ_7UfKoh6B"
+      },
+      "continuousLoad": false,
+      "watchLoad": false,
+      "serverPersistent": false
+    },
+    "playwright": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "@playwright/mcp@latest"
+      ],
+      "continuousLoad": false,
+      "watchLoad": false,
+      "serverPersistent": false
+    },
+    "testsprite": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "@testsprite/mcp-server"
+      ],
+      "env": {},
+      "continuousLoad": false,
+      "watchLoad": false,
+      "serverPersistent": false
+    },
+    "context7": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "@upstash/context7-mcp"
+      ],
+      "env": {
+        "CONTEXT7_API_KEY": "ctx7sk-8b0e3670-67e5-4779-ad32-03566b5831e9"
+      },
+      "continuousLoad": false,
+      "watchLoad": false,
+      "serverPersistent": false
+    },
+    "vercel": {
+      "url": "https://mcp.vercel.com",
+      "continuousLoad": false,
+      "watchLoad": false,
+      "serverPersistent": false
+    }
+  },
+  "continuousLoad": false,
+  "watchLoad": false,
+  "serverPersistent": false
+}

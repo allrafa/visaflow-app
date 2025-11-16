@@ -1,0 +1,6 @@
+# Supabase CLI config
+[project]
+id = "jsnvrhbeedkifqwmsumc"
+
+[db]
+port = 5432
