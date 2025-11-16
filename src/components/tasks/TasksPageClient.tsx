@@ -16,7 +16,7 @@ interface TasksPageClientProps {
 }
 
 export function TasksPageClient({ initialTasks, processes }: TasksPageClientProps) {
-  const toastContext = useToast();
+  const { addToast } = useToast();
   const [tasks, setTasks] = useState(initialTasks);
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedProcess, setSelectedProcess] = useState('all');
@@ -55,17 +55,18 @@ export function TasksPageClient({ initialTasks, processes }: TasksPageClientProp
       // API call
       await updateTask(taskId, updates);
 
-      toastContext.toast({
+      addToast({
+        type: 'success',
         title: 'Task updated',
         description: 'The task has been updated successfully.',
       });
     } catch (error) {
       // Revert on error
       setTasks(initialTasks);
-      toastContext.toast({
+      addToast({
+        type: 'error',
         title: 'Error',
         description: 'Failed to update task. Please try again.',
-        variant: 'destructive',
       });
     }
   };
@@ -77,9 +78,9 @@ export function TasksPageClient({ initialTasks, processes }: TasksPageClientProp
 
   const taskStats = {
     total: tasks.length,
-    todo: tasks.filter((t) => t.status === 'TODO').length,
+    todo: tasks.filter((t) => t.status === 'PENDING').length,
     inProgress: tasks.filter((t) => t.status === 'IN_PROGRESS').length,
-    done: tasks.filter((t) => t.status === 'DONE').length,
+    done: tasks.filter((t) => t.status === 'COMPLETED').length,
   };
 
   return (

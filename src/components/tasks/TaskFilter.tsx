@@ -49,9 +49,11 @@ export function TaskFilter({
           </SelectTrigger>
           <SelectContent>
             <SelectItem value="all">All Status</SelectItem>
-            <SelectItem value="TODO">To Do</SelectItem>
+            <SelectItem value="PENDING">To Do</SelectItem>
             <SelectItem value="IN_PROGRESS">In Progress</SelectItem>
-            <SelectItem value="DONE">Done</SelectItem>
+            <SelectItem value="COMPLETED">Completed</SelectItem>
+            <SelectItem value="WITH_UPLOAD">With Upload</SelectItem>
+            <SelectItem value="BLOCKED">Blocked</SelectItem>
           </SelectContent>
         </Select>
       </div>

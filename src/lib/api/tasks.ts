@@ -17,11 +17,13 @@ export interface CreateTaskInput {
 
 export interface UpdateTaskInput {
   title?: string;
-  description?: string;
+  description?: string | null;
   status?: Task['status'];
+  priority?: Task['priority'];
   phase?: Task['phase'];
   order?: number;
   dependsOn?: string[];
+  completedAt?: Date | null;
 }
 
 /**

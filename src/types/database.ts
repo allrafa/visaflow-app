@@ -26,7 +26,7 @@ export interface Task {
   phase: string;
   title: string;
   description: string | null;
-  status: 'TODO' | 'IN_PROGRESS' | 'DONE';
+  status: 'PENDING' | 'IN_PROGRESS' | 'COMPLETED' | 'WITH_UPLOAD' | 'BLOCKED'; // Matches Prisma schema
   priority?: 'LOW' | 'MEDIUM' | 'HIGH'; // Added for task filtering
   order: number;
   dependsOn: string[];
@@ -68,7 +68,7 @@ export interface RecommendationLetter {
 export interface UpdateTaskInput {
   title?: string;
   description?: string | null;
-  status?: 'TODO' | 'IN_PROGRESS' | 'DONE';
+  status?: 'PENDING' | 'IN_PROGRESS' | 'COMPLETED' | 'WITH_UPLOAD' | 'BLOCKED';
   priority?: 'LOW' | 'MEDIUM' | 'HIGH';
   phase?: string;
   order?: number;
@@ -77,7 +77,7 @@ export interface UpdateTaskInput {
 
 // Type aliases for convenience
 export type ProcessPhase = 'preparation' | 'evidence' | 'letters' | 'review' | 'submission';
-export type TaskStatus = 'TODO' | 'IN_PROGRESS' | 'DONE';
+export type TaskStatus = 'PENDING' | 'IN_PROGRESS' | 'COMPLETED' | 'WITH_UPLOAD' | 'BLOCKED';
 export type TaskPriority = 'LOW' | 'MEDIUM' | 'HIGH';
 
 

@@ -7,7 +7,7 @@ import { Card } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { cn } from '@/lib/utils';
 
-type TaskStatus = 'TODO' | 'IN_PROGRESS' | 'DONE';
+type TaskStatus = 'PENDING' | 'IN_PROGRESS' | 'COMPLETED';
 
 interface TasksBoardProps {
   tasks: Task[];
@@ -24,7 +24,7 @@ interface ColumnConfig {
 
 const COLUMNS: ColumnConfig[] = [
   {
-    id: 'TODO',
+    id: 'PENDING',
     title: 'To Do',
     color: 'text-gray-700',
     bgColor: 'bg-gray-50',
@@ -36,7 +36,7 @@ const COLUMNS: ColumnConfig[] = [
     bgColor: 'bg-blue-50',
   },
   {
-    id: 'DONE',
+    id: 'COMPLETED',
     title: 'Done',
     color: 'text-green-700',
     bgColor: 'bg-green-50',

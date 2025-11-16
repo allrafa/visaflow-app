@@ -1,6 +1,6 @@
 import { redirect } from 'next/navigation';
 import { getAuthUser } from '@/lib/auth/getAuthUser';
-import { getProcessesByUserId } from '@/lib/services/processService';
+import { prisma } from '@/lib/db/client';
 import { TasksPageClient } from '@/components/tasks/TasksPageClient';
 
 export default async function TasksPage() {
@@ -11,14 +11,21 @@ export default async function TasksPage() {
     redirect('/auth/login');
   }
 
-  // Fetch all processes for the user
-  const processes = await getProcessesByUserId(user.id);
+  // Fetch all processes with their tasks
+  const processes = await prisma.process.findMany({
+    where: { userId: user.id },
+    include: {
+      tasks: {
+        orderBy: { order: 'asc' },
+      },
+    },
+  });
 
   // Gather all tasks from all processes
   const allTasks = processes.flatMap((process) => {
-    return (process.tasks || []).map((task: any) => ({
+    return (process.tasks || []).map((task) => ({
       ...task,
-      processName: process.candidateName || process.title,
+      processName: process.title,
     }));
   });
 

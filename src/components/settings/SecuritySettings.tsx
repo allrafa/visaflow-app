@@ -14,7 +14,7 @@ interface SecuritySettingsProps {
 }
 
 export function SecuritySettings({ user }: SecuritySettingsProps) {
-  const toastContext = useToast();
+  const { addToast } = useToast();
   const [loading, setLoading] = useState(false);
   const [twoFactorEnabled, setTwoFactorEnabled] = useState(false);
   const [currentPassword, setCurrentPassword] = useState('');
@@ -33,7 +33,8 @@ export function SecuritySettings({ user }: SecuritySettingsProps) {
       // TODO: Implement API call
       await new Promise((resolve) => setTimeout(resolve, 1000));
 
-      toastContext.toast({
+      addToast({
+        type: 'success',
         title: 'Password changed',
         description: 'Your password has been updated successfully.',
       });
@@ -42,10 +43,10 @@ export function SecuritySettings({ user }: SecuritySettingsProps) {
       setNewPassword('');
       setConfirmPassword('');
     } catch (error: any) {
-      toastContext.toast({
+      addToast({
+        type: 'error',
         title: 'Error',
         description: error.message || 'Failed to change password. Please try again.',
-        variant: 'destructive',
       });
     } finally {
       setLoading(false);
