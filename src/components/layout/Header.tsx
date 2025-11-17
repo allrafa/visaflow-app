@@ -11,7 +11,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-import { LogOut, User, Settings, FileText } from 'lucide-react';
+import { LogOut, User, Settings, FileText, Plus } from 'lucide-react';
 
 export function Header() {
   const { user, signOut } = useAuth();
@@ -27,7 +27,7 @@ export function Header() {
           <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-primary text-primary-foreground font-bold text-xl">
             VF
           </div>
-          <div className="flex flex-col">
+          <div className="hidden sm:flex flex-col">
             <h1 className="text-subtitle font-semibold">VisaFlow</h1>
             <span className="text-small text-muted">
               EB-1A Management System
@@ -35,8 +35,21 @@ export function Header() {
           </div>
         </Link>
 
-        {/* User Menu */}
-        <div className="flex items-center gap-4">
+        {/* Actions */}
+        <div className="flex items-center gap-2 sm:gap-4">
+          {/* Create New Process Button */}
+          <Link href="/dashboard/process/new">
+            <Button 
+              variant="default" 
+              size="sm"
+              className="gap-2"
+            >
+              <Plus className="h-4 w-4" />
+              <span className="hidden sm:inline">New Process</span>
+            </Button>
+          </Link>
+
+          {/* User Menu */}
           <DropdownMenu>
             <DropdownMenuTrigger asChild data-tour="user-menu">
               <Button variant="ghost" className="gap-2">
@@ -89,6 +102,3 @@ export function Header() {
     </header>
   );
 }
-
-
-
