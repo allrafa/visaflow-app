@@ -9,6 +9,9 @@ const nextConfig = {
   eslint: {
     ignoreDuringBuilds: true, // Ignore ESLint errors during Vercel build
   },
+  experimental: {
+    optimizePackageImports: ['lucide-react', '@radix-ui/react-icons'],
+  },
 };
 
 // Sentry webpack plugin options

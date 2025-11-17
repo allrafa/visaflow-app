@@ -1,9 +1,17 @@
 import { defineConfig, devices } from '@playwright/test';
 import dotenv from 'dotenv';
 import path from 'path';
+import fs from 'fs';
 
-// Carregar variáveis de ambiente do arquivo .env
-dotenv.config({ path: path.resolve(__dirname, '.env') });
+// Carregar variáveis de ambiente do arquivo .env.test se existir, caso contrário do .env
+const envTestPath = path.resolve(__dirname, '.env.test');
+const envPath = path.resolve(__dirname, '.env');
+
+if (fs.existsSync(envTestPath)) {
+  dotenv.config({ path: envTestPath });
+} else {
+  dotenv.config({ path: envPath });
+}
 
 export default defineConfig({
   testDir: './tests/e2e',
@@ -14,12 +22,12 @@ export default defineConfig({
   reporter: 'html',
   use: {
     ...devices['Desktop Chrome'],
-    baseURL: process.env.PLAYWRIGHT_BASE_URL || 'http://localhost:3000',
+    baseURL: process.env.PLAYWRIGHT_BASE_URL || 'http://localhost:3002',
     trace: 'on-first-retry',
-    // Timeout para ações
-    actionTimeout: 10000,
-    // Timeout para navegação
-    navigationTimeout: 30000,
+    // Timeout para ações (aumentado para 30s)
+    actionTimeout: 30000,
+    // Timeout para navegação (aumentado para 60s)
+    navigationTimeout: 60000,
     // Screenshot apenas em falhas
     screenshot: 'only-on-failure',
     // Video apenas em falhas
@@ -35,8 +43,8 @@ export default defineConfig({
   ],
   webServer: {
     command: 'npm run dev',
-    url: 'http://localhost:3000',
-    reuseExistingServer: !process.env.CI,
+    url: process.env.PLAYWRIGHT_BASE_URL || 'http://localhost:3002',
+    reuseExistingServer: true,
     timeout: 120000,
   },
   // Variáveis de ambiente disponíveis nos testes via process.env

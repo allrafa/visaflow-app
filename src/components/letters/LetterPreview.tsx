@@ -1,8 +1,5 @@
 'use client';
 
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
-import { Button } from '@/components/ui/button';
 import { Download, Edit, Trash2, Mail, FileText } from 'lucide-react';
 
 interface LetterPreviewProps {
@@ -22,31 +19,20 @@ interface LetterPreviewProps {
 }
 
 export function LetterPreview({ letter, onEdit, onDelete }: LetterPreviewProps) {
-  const getStatusColor = (status: string) => {
+  const getStatusConfig = (status: string) => {
     switch (status) {
       case 'signed':
-        return 'bg-green-500';
+        return { label: 'Signed', color: 'text-purple-3', bgColor: 'bg-purple-muted' };
       case 'final':
-        return 'bg-blue-500';
+        return { label: 'Final', color: 'text-purple-1', bgColor: 'bg-purple-muted' };
       case 'review':
-        return 'bg-yellow-500';
+        return { label: 'Review', color: 'text-purple-2', bgColor: 'bg-purple-muted' };
       default:
-        return 'bg-gray-500';
+        return { label: 'Draft', color: 'text-muted-foreground', bgColor: 'bg-muted' };
     }
   };
 
-  const getStatusLabel = (status: string) => {
-    switch (status) {
-      case 'signed':
-        return 'Signed';
-      case 'final':
-        return 'Final';
-      case 'review':
-        return 'Review';
-      default:
-        return 'Draft';
-    }
-  };
+  const statusConfig = getStatusConfig(letter.status);
 
   const handleExport = () => {
     if (!letter.content) return;
@@ -70,7 +56,7 @@ ${letter.content}
 
 ---
 
-Status: ${getStatusLabel(letter.status)}
+Status: ${statusConfig.label}
 Created: ${new Date(letter.createdAt).toLocaleDateString()}
 Updated: ${new Date(letter.updatedAt).toLocaleDateString()}
 `;
@@ -87,69 +73,90 @@ Updated: ${new Date(letter.updatedAt).toLocaleDateString()}
   };
 
   return (
-    <Card>
-      <CardHeader>
-        <div className="flex items-start justify-between">
-          <div className="flex-1">
-            <CardTitle className="flex items-center gap-2">
-              <FileText className="h-5 w-5" />
-              {letter.recommenderName}
-            </CardTitle>
-            <CardDescription className="mt-1">
-              {letter.recommenderTitle}
-              {letter.recommenderOrg && ` • ${letter.recommenderOrg}`}
-            </CardDescription>
+    <div className="card p-6 space-y-6">
+      {/* Header */}
+      <div className="flex items-start justify-between gap-4">
+        <div className="flex-1">
+          <div className="flex items-center gap-3">
+            <div className="icon-container rounded-lg p-2 bg-purple-muted">
+              <FileText className="h-5 w-5 text-purple-1" />
+            </div>
+            <div>
+              <h3 className="text-title font-semibold">{letter.recommenderName}</h3>
+              <p className="text-body text-muted-foreground mt-0.5">
+                {letter.recommenderTitle}
+                {letter.recommenderOrg && ` • ${letter.recommenderOrg}`}
+              </p>
+            </div>
           </div>
-          <Badge className={getStatusColor(letter.status)}>
-            {getStatusLabel(letter.status)}
-          </Badge>
         </div>
-      </CardHeader>
-      <CardContent className="space-y-4">
-        {letter.recommenderEmail && (
-          <div className="flex items-center gap-2 text-sm text-muted-foreground">
-            <Mail className="h-4 w-4" />
-            <span>{letter.recommenderEmail}</span>
+
+        {/* Status Badge */}
+        <div className={`px-3 py-1.5 rounded-full ${statusConfig.bgColor}`}>
+          <span className={`text-small font-medium ${statusConfig.color}`}>
+            {statusConfig.label}
+          </span>
+        </div>
+      </div>
+
+      {/* Email */}
+      {letter.recommenderEmail && (
+        <div className="flex items-center gap-2 text-body text-muted-foreground">
+          <div className="icon-container">
+            <Mail className="h-4 w-4 text-purple-2" />
           </div>
+          <span>{letter.recommenderEmail}</span>
+        </div>
+      )}
+
+      {/* Content */}
+      {letter.content ? (
+        <div className="rounded-lg border border-border bg-muted/30 p-4">
+          <pre className="whitespace-pre-wrap text-body font-mono max-h-96 overflow-y-auto">
+            {letter.content}
+          </pre>
+        </div>
+      ) : (
+        <div className="rounded-lg border border-dashed border-border p-8 text-center">
+          <p className="text-body text-muted-foreground">No content yet. Click Edit to add letter content.</p>
+        </div>
+      )}
+
+      {/* Actions */}
+      <div className="flex gap-2 pt-4 border-t border-border">
+        <button
+          onClick={handleExport}
+          className="btn-secondary flex-1 gap-2"
+        >
+          <Download className="h-4 w-4" />
+          Export
+        </button>
+        {onEdit && (
+          <button
+            onClick={onEdit}
+            className="icon-container px-4 py-2 rounded-lg border border-border hover:bg-muted transition-colors gap-2 flex items-center"
+          >
+            <Edit className="h-4 w-4 text-purple-1" />
+            <span className="text-body font-medium">Edit</span>
+          </button>
         )}
-
-        {letter.content ? (
-          <div className="rounded-lg border bg-muted/30 p-4">
-            <pre className="whitespace-pre-wrap text-sm font-mono max-h-96 overflow-y-auto">
-              {letter.content}
-            </pre>
-          </div>
-        ) : (
-          <div className="rounded-lg border border-dashed p-8 text-center text-muted-foreground">
-            <p>No content yet. Click Edit to add letter content.</p>
-          </div>
+        {onDelete && (
+          <button
+            onClick={onDelete}
+            className="icon-container px-4 py-2 rounded-lg border border-destructive hover:bg-destructive-muted transition-colors gap-2 flex items-center"
+          >
+            <Trash2 className="h-4 w-4 text-destructive" />
+            <span className="text-body font-medium text-destructive">Delete</span>
+          </button>
         )}
+      </div>
 
-        <div className="flex gap-2">
-          <Button onClick={handleExport} variant="outline" size="sm" className="flex-1">
-            <Download className="mr-2 h-4 w-4" />
-            Export
-          </Button>
-          {onEdit && (
-            <Button onClick={onEdit} variant="outline" size="sm">
-              <Edit className="mr-2 h-4 w-4" />
-              Edit
-            </Button>
-          )}
-          {onDelete && (
-            <Button onClick={onDelete} variant="destructive" size="sm">
-              <Trash2 className="mr-2 h-4 w-4" />
-              Delete
-            </Button>
-          )}
-        </div>
-
-        <div className="text-xs text-muted-foreground">
-          Created: {new Date(letter.createdAt).toLocaleDateString()} • Updated:{' '}
-          {new Date(letter.updatedAt).toLocaleDateString()}
-        </div>
-      </CardContent>
-    </Card>
+      {/* Metadata */}
+      <div className="text-small text-muted-foreground">
+        Created: {new Date(letter.createdAt).toLocaleDateString()} • Updated:{' '}
+        {new Date(letter.updatedAt).toLocaleDateString()}
+      </div>
+    </div>
   );
 }
 

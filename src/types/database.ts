@@ -75,10 +75,47 @@ export interface UpdateTaskInput {
   completedAt?: Date | null;
 }
 
+export interface Activity {
+  id: string;
+  processId: string;
+  userId: string;
+  userName: string | null;
+  action: ActivityAction;
+  entityType: string;
+  entityId: string | null;
+  entityName: string | null;
+  description: string;
+  metadata: Record<string, any> | null;
+  createdAt: Date;
+}
+
 // Type aliases for convenience
 export type ProcessPhase = 'preparation' | 'evidence' | 'letters' | 'review' | 'submission';
 export type TaskStatus = 'PENDING' | 'IN_PROGRESS' | 'COMPLETED' | 'WITH_UPLOAD' | 'BLOCKED';
 export type TaskPriority = 'LOW' | 'MEDIUM' | 'HIGH';
+
+export type ActivityAction =
+  | 'PROCESS_CREATED'
+  | 'PROCESS_UPDATED'
+  | 'PROCESS_DELETED'
+  | 'TASK_CREATED'
+  | 'TASK_UPDATED'
+  | 'TASK_COMPLETED'
+  | 'TASK_DELETED'
+  | 'CRITERIA_CREATED'
+  | 'CRITERIA_UPDATED'
+  | 'CRITERIA_VALIDATED'
+  | 'CRITERIA_DELETED'
+  | 'LETTER_CREATED'
+  | 'LETTER_UPDATED'
+  | 'LETTER_SENT'
+  | 'LETTER_SIGNED'
+  | 'LETTER_DELETED'
+  | 'FILE_UPLOADED'
+  | 'FILE_DELETED'
+  | 'COLLABORATOR_INVITED'
+  | 'COLLABORATOR_ACCEPTED'
+  | 'COLLABORATOR_REMOVED';
 
 
 

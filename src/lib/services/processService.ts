@@ -58,6 +58,16 @@ export async function getProcessById(processId: string, userId: string) {
     include: {
       tasks: {
         orderBy: { order: 'asc' },
+        // TODO: Uncomment when created_by_id migration is applied
+        // include: {
+        //   createdBy: {
+        //     select: {
+        //       id: true,
+        //       email: true,
+        //       name: true,
+        //     },
+        //   },
+        // },
       },
       criteria: true,
       letters: true,

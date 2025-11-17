@@ -5,6 +5,7 @@ import { createProcessSchema } from '@/lib/validators/process.schema';
 import { withErrorHandling } from '@/lib/errors/errorHandler';
 import { ensureUserExists } from '@/lib/auth/ensureUserExists';
 import { z } from 'zod';
+import { logActivity } from '@/lib/services/activityService';
 
 export async function GET(request: NextRequest) {
   return withErrorHandling(async () => {
@@ -31,6 +32,18 @@ export async function POST(request: NextRequest) {
     const process = await createProcess({
       userId: user.id,
       ...validated,
+    });
+
+    // Registrar atividade
+    await logActivity({
+      processId: process.id,
+      userId: user.id,
+      userName: user.email,
+      action: 'PROCESS_CREATED',
+      entityType: 'process',
+      entityId: process.id,
+      entityName: process.title,
+      description: `${user.email} criou o processo: ${process.title}`,
     });
 
     return NextResponse.json(process, { status: 201 });

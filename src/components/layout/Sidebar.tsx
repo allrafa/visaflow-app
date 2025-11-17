@@ -6,11 +6,12 @@ import { cn } from '@/lib/utils/cn';
 import {
   LayoutDashboard,
   FolderOpen,
-  ListChecks,
   Award,
   Mail,
   FileText,
   HelpCircle,
+  Clock,
+  ListTodo,
 } from 'lucide-react';
 
 interface NavItem {
@@ -25,45 +26,52 @@ const navigation: NavItem[] = [
     name: 'Dashboard',
     href: '/dashboard',
     icon: LayoutDashboard,
-    description: 'Overview of all processes',
+    description: 'Overview of all processes and progress',
   },
   {
     name: 'My Processes',
-    href: '/dashboard/process',
+    href: '/dashboard',
     icon: FolderOpen,
-    description: 'Manage EB-1A processes',
-  },
-  {
-    name: 'Tasks',
-    href: '/dashboard/tasks',
-    icon: ListChecks,
-    description: 'Track progress',
+    description: 'Manage your EB-1A processes - view all tasks organized by phase',
   },
   {
     name: 'Criteria',
     href: '/dashboard/criteria',
     icon: Award,
-    description: '10 EB-1A criteria',
+    description: 'Prove 3+ of 10 EB-1A criteria - Core of your petition (80% of weight). Each criterion requires 4 subsections with evidence.',
   },
   {
     name: 'Letters',
     href: '/dashboard/letters',
     icon: Mail,
-    description: 'Recommendation letters',
+    description: 'Obtain 5-7 recommendation letters from recognized experts - External validation (20% of weight)',
   },
   {
     name: 'Final Merits',
     href: '/dashboard/final-merits',
     icon: FileText,
-    description: 'Generate I-140',
+    description: 'Generate complete I-140 petition (20-30 pages) - Demonstrates sustained international acclaim beyond minimum criteria',
   },
 ];
 
 const secondaryNavigation: NavItem[] = [
   {
+    name: 'Next Actions',
+    href: '/dashboard/actions',
+    icon: ListTodo,
+    description: 'View all prioritized actions across processes',
+  },
+  {
+    name: 'Recent Activity',
+    href: '/dashboard/activity',
+    icon: Clock,
+    description: 'View complete timeline of actions and changes',
+  },
+  {
     name: 'Help & Docs',
     href: '/dashboard/help',
     icon: HelpCircle,
+    description: 'Documentation and guides',
   },
 ];
 
@@ -78,35 +86,22 @@ export function Sidebar() {
   };
 
   return (
-    <aside className="hidden w-64 border-r bg-gray-50 md:block">
-      <nav className="flex h-full flex-col">
+    <aside className="sidebar">
+      <nav className="sidebar-nav">
         {/* Main Navigation */}
-        <div className="flex-1 space-y-1 p-4">
-          <p className="mb-2 px-3 text-xs font-semibold text-gray-500 uppercase tracking-wider">
-            Main Menu
-          </p>
+        <div className="flex-1 space-y-1 px-2 py-4">
           {navigation.map((item) => {
             const isActive = isActiveRoute(item.href);
             return (
               <Link
                 key={item.name}
                 href={item.href}
-                className={cn(
-                  'group flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-all',
-                  isActive
-                    ? 'bg-blue-600 text-white shadow-sm'
-                    : 'text-gray-700 hover:bg-gray-100 hover:text-gray-900'
-                )}
+                className={isActive ? 'sidebar-item-active' : 'sidebar-item'}
                 title={item.description}
               >
-                <item.icon
-                  className={cn(
-                    'h-5 w-5 flex-shrink-0 transition-colors',
-                    isActive
-                      ? 'text-white'
-                      : 'text-gray-500 group-hover:text-gray-700'
-                  )}
-                />
+                <div className="icon-container">
+                  <item.icon className="sidebar-icon text-purple-1" />
+                </div>
                 <span className="flex-1">{item.name}</span>
               </Link>
             );
@@ -114,29 +109,20 @@ export function Sidebar() {
         </div>
 
         {/* Secondary Navigation */}
-        <div className="border-t p-4">
+        <div className="sidebar-footer space-y-1">
           {secondaryNavigation.map((item) => {
             const isActive = isActiveRoute(item.href);
             return (
               <Link
                 key={item.name}
                 href={item.href}
-                className={cn(
-                  'group flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-all',
-                  isActive
-                    ? 'bg-blue-600 text-white'
-                    : 'text-gray-600 hover:bg-gray-100 hover:text-gray-900'
-                )}
+                className={isActive ? 'sidebar-item-active' : 'sidebar-item'}
+                title={item.description}
               >
-                <item.icon
-                  className={cn(
-                    'h-5 w-5 flex-shrink-0',
-                    isActive
-                      ? 'text-white'
-                      : 'text-gray-400 group-hover:text-gray-600'
-                  )}
-                />
-                {item.name}
+                <div className="icon-container">
+                  <item.icon className="sidebar-icon text-purple-2" />
+                </div>
+                <span className="flex-1">{item.name}</span>
               </Link>
             );
           })}

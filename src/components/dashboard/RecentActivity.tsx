@@ -1,8 +1,6 @@
 'use client';
 
-import { Card } from '@/components/ui/card';
 import { CheckCircle2, FileText, Mail, Plus } from 'lucide-react';
-import { cn } from '@/lib/utils';
 
 interface Activity {
   id: string;
@@ -24,11 +22,12 @@ const ACTIVITY_ICONS: Record<Activity['type'], React.ElementType> = {
   document_uploaded: Mail,
 };
 
-const ACTIVITY_COLORS: Record<Activity['type'], { icon: string; bg: string }> = {
-  task_completed: { icon: 'text-green-600', bg: 'bg-green-100' },
-  letter_saved: { icon: 'text-blue-600', bg: 'bg-blue-100' },
-  process_created: { icon: 'text-purple-600', bg: 'bg-purple-100' },
-  document_uploaded: { icon: 'text-amber-600', bg: 'bg-amber-100' },
+// Priority-based purple shades (darker = more important)
+const ACTIVITY_COLORS: Record<Activity['type'], { purpleShade: string }> = {
+  task_completed: { purpleShade: 'text-purple-3' },      // Darkest - highest priority
+  process_created: { purpleShade: 'text-purple-1' },     // Medium
+  letter_saved: { purpleShade: 'text-purple-2' },        // Lighter
+  document_uploaded: { purpleShade: 'text-purple-2' },   // Lighter
 };
 
 function formatTimestamp(date: Date): string {
@@ -54,38 +53,38 @@ export function RecentActivity({ activities = [], maxItems = 5 }: RecentActivity
 
   if (activities.length === 0) {
     return (
-      <Card className="p-8 text-center">
-        <p className="text-gray-500">No recent activity</p>
-        <p className="text-sm text-gray-400 mt-1">
+      <div className="card p-8 text-center">
+        <p className="text-muted-foreground">No recent activity</p>
+        <p className="text-body text-muted-foreground mt-1">
           Start working on your processes to see activity here
         </p>
-      </Card>
+      </div>
     );
   }
 
   return (
-    <Card className="p-6">
-      <h3 className="text-lg font-semibold text-gray-900 mb-4">Recent Activity</h3>
+    <div className="card p-6 animate-fade-in">
+      <h3 className="text-title mb-4">Recent Activity</h3>
 
       <div className="space-y-4">
         {displayedActivities.map((activity) => {
           const Icon = ACTIVITY_ICONS[activity.type];
-          const colors = ACTIVITY_COLORS[activity.type];
+          const { purpleShade } = ACTIVITY_COLORS[activity.type];
 
           return (
             <div key={activity.id} className="flex items-start gap-3">
-              <div className={cn('rounded-lg p-2 flex-shrink-0', colors.bg)}>
-                <Icon className={cn('h-4 w-4', colors.icon)} />
+              <div className="icon-container rounded-lg p-2 bg-purple-muted flex-shrink-0">
+                <Icon className={`h-4 w-4 ${purpleShade}`} />
               </div>
 
               <div className="flex-1 min-w-0">
-                <p className="text-sm font-medium text-gray-900">
+                <p className="text-body font-medium">
                   {activity.title}
                 </p>
-                <p className="text-sm text-gray-600 truncate">
+                <p className="text-body text-muted-foreground truncate">
                   {activity.description}
                 </p>
-                <p className="text-xs text-gray-500 mt-1">
+                <p className="text-small text-muted-foreground mt-1">
                   {formatTimestamp(activity.timestamp)}
                 </p>
               </div>
@@ -95,12 +94,12 @@ export function RecentActivity({ activities = [], maxItems = 5 }: RecentActivity
       </div>
 
       {activities.length > maxItems && (
-        <div className="mt-4 pt-4 border-t">
-          <button className="text-sm text-blue-600 hover:text-blue-700 font-medium">
+        <div className="mt-4 pt-4 border-t border-border">
+          <button className="text-body text-purple-1 hover:text-purple-3 font-medium transition-colors">
             View all activity →
           </button>
         </div>
       )}
-    </Card>
+    </div>
   );
 }

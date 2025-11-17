@@ -4,7 +4,6 @@ import { getProcessesByUserId } from '@/lib/services/processService';
 import { QuickAccessGrid } from '@/components/dashboard/QuickAccessGrid';
 import { ProcessOverview } from '@/components/dashboard/ProcessOverview';
 import { RecentActivity } from '@/components/dashboard/RecentActivity';
-import { Button } from '@/components/ui/button';
 import { Plus } from 'lucide-react';
 import Link from 'next/link';
 import type { Process } from '@/types/database';
@@ -50,15 +49,15 @@ export default async function DashboardPage() {
   ];
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      <div className="container mx-auto space-y-8 p-8">
-        {/* Header Section */}
-        <div>
-          <h1 className="text-4xl font-bold text-gray-900">
-            Welcome back, {user.user_metadata?.name || 'there'}! 👋
+    <div className="min-h-screen bg-background">
+      <div className="container-wide py-8 space-y-section">
+        {/* Header Section - Minimal */}
+        <div className="animate-fade-in">
+          <h1 className="text-headline">
+            My Processes
           </h1>
-          <p className="mt-2 text-lg text-gray-600">
-            You have {processes.length} active {processes.length === 1 ? 'process' : 'processes'}
+          <p className="text-body text-muted-foreground mt-1">
+            Manage your EB-1A immigration processes
           </p>
         </div>
 
@@ -69,26 +68,26 @@ export default async function DashboardPage() {
         <div className="grid gap-8 lg:grid-cols-3">
           {/* Active Processes */}
           <div className="lg:col-span-2 space-y-6">
-            <h2 className="text-2xl font-bold text-gray-900">Active Processes</h2>
+            <h2 className="text-title">Active Processes</h2>
 
             {processes.length === 0 ? (
-              <div className="rounded-xl border-2 border-dashed border-gray-300 bg-white p-16 text-center">
-                <div className="mx-auto max-w-md">
-                  <div className="mb-4 text-6xl">📁</div>
-                  <h3 className="mb-2 text-xl font-semibold text-gray-900">
-                    No processes yet
-                  </h3>
-                  <p className="mb-6 text-gray-600">
-                    Get started by creating your first EB-1A process.
-                    We'll guide you through every step!
-                  </p>
-                  <Link href="/dashboard/process/new">
-                    <Button size="lg" className="gap-2">
-                      <Plus className="h-5 w-5" />
-                      Create First Process
-                    </Button>
-                  </Link>
+              <div className="empty-state">
+                <div className="empty-state-icon">
+                  📁
                 </div>
+                <h3 className="empty-state-title">
+                  No processes yet
+                </h3>
+                <p className="empty-state-description">
+                  Get started by creating your first EB-1A process.
+                  We'll guide you through every step!
+                </p>
+                <Link href="/dashboard/process/new">
+                  <button className="btn-primary gap-2">
+                    <Plus className="h-4 w-4" />
+                    Create First Process
+                  </button>
+                </Link>
               </div>
             ) : (
               <div className="space-y-4">

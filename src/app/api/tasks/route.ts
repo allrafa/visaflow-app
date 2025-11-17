@@ -4,6 +4,7 @@ import { createTask, getTasksByProcessId } from '@/lib/services/taskService';
 import { createTaskSchema } from '@/lib/validators/task.schema';
 import { withErrorHandling } from '@/lib/errors/errorHandler';
 import { getProcessById } from '@/lib/services/processService';
+import { logActivity } from '@/lib/services/activityService';
 
 export async function GET(request: NextRequest) {
   return withErrorHandling(async () => {
@@ -34,16 +35,28 @@ export async function POST(request: NextRequest) {
   return withErrorHandling(async () => {
     const user = await getAuthUser();
     const body = await request.json();
-    
+
     // Validar input
     const validated = createTaskSchema.parse(body);
-    
+
     // Verificar ownership do processo
     await getProcessById(validated.processId, user.id);
-    
+
     // Criar task
     const task = await createTask(validated);
-    
+
+    // Registrar atividade
+    await logActivity({
+      processId: validated.processId,
+      userId: user.id,
+      userName: user.email,
+      action: 'TASK_CREATED',
+      entityType: 'task',
+      entityId: task.id,
+      entityName: task.title,
+      description: `${user.email} criou a tarefa: ${task.title}`,
+    });
+
     return NextResponse.json(task, { status: 201 });
   })(request);
 }

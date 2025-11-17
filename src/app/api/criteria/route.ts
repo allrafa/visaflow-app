@@ -4,6 +4,7 @@ import { createCriteria, getCriteriaByProcessId } from '@/lib/services/criteriaS
 import { createCriteriaSchema } from '@/lib/validators/criteria.schema';
 import { withErrorHandling } from '@/lib/errors/errorHandler';
 import { getProcessById } from '@/lib/services/processService';
+import { logActivity } from '@/lib/services/activityService';
 
 export async function GET(request: NextRequest) {
   return withErrorHandling(async () => {
@@ -30,16 +31,28 @@ export async function POST(request: NextRequest) {
   return withErrorHandling(async () => {
     const user = await getAuthUser();
     const body = await request.json();
-    
+
     // Validar input
     const validated = createCriteriaSchema.parse(body);
-    
+
     // Verificar ownership do processo
     await getProcessById(validated.processId, user.id);
-    
+
     // Criar critério
     const criteria = await createCriteria(validated);
-    
+
+    // Registrar atividade
+    await logActivity({
+      processId: validated.processId,
+      userId: user.id,
+      userName: user.email,
+      action: 'CRITERIA_CREATED',
+      entityType: 'criteria',
+      entityId: criteria.id,
+      entityName: `${criteria.criteriaType} - ${criteria.subsection}`,
+      description: `${user.email} adicionou o critério: ${criteria.criteriaType} - ${criteria.subsection}`,
+    });
+
     return NextResponse.json(criteria, { status: 201 });
   })(request);
 }

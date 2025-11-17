@@ -1,220 +1,163 @@
-// prisma/schema.prisma
+generator client {
+  provider = "prisma-client-js"
+}
 
 datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
 }
 
-generator client {
-  provider = "prisma-client-js"
-}
-
-// ============================================
-// ENUMS
-// ============================================
-
-enum ProcessPhase {
-  ELIGIBILITY    // Fase 1: Elegibilidade e Estratégia
-  EVIDENCE       // Fase 2: Evidências
-  LETTERS        // Fase 3: Cartas de Recomendação
-  PETITION       // Fase 4: Dossiê Final (I-140)
-  FILING         // Fase 5: Protocolo e Acompanhamento
-}
-
-enum TaskStatus {
-  PENDING        // Pendente
-  IN_PROGRESS    // Em progresso
-  COMPLETED      // Concluída
-  WITH_UPLOAD    // Com upload anexado
-  BLOCKED        // Bloqueada (dependência)
-}
-
-enum EB1Criteria {
-  AWARDS              // Prêmios reconhecidos
-  MEMBERSHIP          // Membership em associações
-  PRESS               // Cobertura de imprensa
-  JUDGING             // Judging work de outros
-  ORIGINAL            // Contribuições originais
-  SCHOLARLY           // Artigos acadêmicos
-  CRITICAL            // Papel crítico/liderança
-  HIGH_SALARY         // Salário alto
-  EXHIBITIONS         // Exibições artísticas
-  COMMERCIAL_SUCCESS  // Sucesso comercial
-}
-
-// ============================================
-// MODELS
-// ============================================
-
 model User {
-  id        String   @id @default(uuid())
-  email     String   @unique
-  name      String?
-  role      String   @default("user") // "user" | "admin"
-  
-  // Relações
-  processes Process[]
-  
-  // Timestamps
-  createdAt DateTime @default(now()) @map("created_at")
-  updatedAt DateTime @updatedAt @map("updated_at")
+  id           String    @id @default(uuid())
+  email        String    @unique
+  name         String?
+  role         String    @default("user")
+  createdAt    DateTime  @default(now()) @map("created_at")
+  updatedAt    DateTime  @updatedAt @map("updated_at")
+  processes    Process[]
+  // TODO: Uncomment after applying migration via Supabase Dashboard
+  // createdTasks Task[]    @relation("TasksCreated")
 
   @@map("users")
 }
 
 model Process {
-  id          String       @id @default(uuid())
-  userId      String       @map("user_id")
-  title       String       // "Rafael Raio - EB-1A Process"
-  description String?
-  
-  // North Star Statement (tese principal)
-  northStar   String?      @map("north_star") @db.Text
-  
-  // Status geral
-  currentPhase ProcessPhase @default(ELIGIBILITY) @map("current_phase")
-  progress     Int         @default(0) // 0-100%
-  
-  // Relações
-  user         User         @relation(fields: [userId], references: [id], onDelete: Cascade)
-  tasks        Task[]
+  id           String                 @id @default(uuid())
+  userId       String                 @map("user_id")
+  title        String
+  description  String?
+  northStar    String?                @map("north_star")
+  currentPhase ProcessPhase           @default(ELIGIBILITY) @map("current_phase")
+  progress     Int                    @default(0)
+  createdAt    DateTime               @default(now()) @map("created_at")
+  updatedAt    DateTime               @updatedAt @map("updated_at")
   criteria     CriteriaEvidence[]
+  user         User                   @relation(fields: [userId], references: [id], onDelete: Cascade)
   letters      RecommendationLetter[]
-  
-  // Timestamps
-  createdAt    DateTime     @default(now()) @map("created_at")
-  updatedAt    DateTime     @updatedAt @map("updated_at")
+  tasks        Task[]
 
   @@index([userId])
   @@map("processes")
 }
 
 model Task {
-  id          String      @id @default(uuid())
-  processId   String      @map("process_id")
+  id          String       @id @default(uuid())
+  processId   String       @map("process_id")
   phase       ProcessPhase
   title       String
-  description String?     @db.Text
-  status      TaskStatus  @default(PENDING)
-  order       Int         @default(0) // Para ordenação customizada
-  
-  // Dependências (IDs de outras tasks)
-  dependsOn   String[]    @map("depends_on")
-  
-  // Relações
-  process     Process     @relation(fields: [processId], references: [id], onDelete: Cascade)
+  description String?
+  status      TaskStatus   @default(PENDING)
+  order       Int          @default(0)
+  dependsOn   String[]     @map("depends_on")
+  createdAt   DateTime     @default(now()) @map("created_at")
+  updatedAt   DateTime     @updatedAt @map("updated_at")
+  completedAt DateTime?    @map("completed_at")
+  // TODO: Uncomment after applying migration via Supabase Dashboard
+  // createdById String?      @map("created_by_id")
+  process     Process      @relation(fields: [processId], references: [id], onDelete: Cascade)
+  // createdBy   User?        @relation("TasksCreated", fields: [createdById], references: [id], onDelete: SetNull)
   uploads     Upload[]
-  
-  // Timestamps
-  createdAt   DateTime    @default(now()) @map("created_at")
-  updatedAt   DateTime    @updatedAt @map("updated_at")
-  completedAt DateTime?   @map("completed_at")
 
   @@index([processId, phase])
+  // @@index([createdById])
   @@map("tasks")
 }
 
 model Upload {
   id          String   @id @default(uuid())
   taskId      String   @map("task_id")
-  
-  // File info
   fileName    String   @map("file_name")
-  fileType    String   @map("file_type") // mime type
-  fileSize    BigInt   @map("file_size") // bytes
-  fileUrl     String   @map("file_url")  // Supabase Storage URL
-  
-  // Storage path (para deletar)
+  fileType    String   @map("file_type")
+  fileSize    BigInt   @map("file_size")
+  fileUrl     String   @map("file_url")
   storagePath String   @map("storage_path")
-  
-  // Relações
-  task        Task     @relation(fields: [taskId], references: [id], onDelete: Cascade)
-  
-  // Timestamps
   uploadedAt  DateTime @default(now()) @map("uploaded_at")
+  task        Task     @relation(fields: [taskId], references: [id], onDelete: Cascade)
 
   @@index([taskId])
   @@map("uploads")
 }
 
 model CriteriaEvidence {
-  id          String      @id @default(uuid())
-  processId   String      @map("process_id")
-  criteria    EB1Criteria
-  
-  // Conteúdo estruturado (4 subseções)
-  overview    String?     @db.Text // Visão geral
-  context     String?     @db.Text // Contexto e background
-  impact      String?     @db.Text // Impacto e resultados
-  evidence    String?     @db.Text // Evidências específicas
-  
-  // Métricas
-  metricsData Json?       @map("metrics_data") // Armazena métricas calculadas
-  
-  // Validação
-  isValidated Boolean     @default(false) @map("is_validated")
-  validationScore Int?    @map("validation_score") // 0-100
-  validationIssues Json?  @map("validation_issues") // Array de issues
-  
-  // Relações
-  process     Process     @relation(fields: [processId], references: [id], onDelete: Cascade)
-  
-  // Timestamps
-  createdAt   DateTime    @default(now()) @map("created_at")
-  updatedAt   DateTime    @updatedAt @map("updated_at")
+  id               String      @id @default(uuid())
+  processId        String      @map("process_id")
+  criteria         EB1Criteria
+  overview         String?
+  context          String?
+  impact           String?
+  evidence         String?
+  metricsData      Json?       @map("metrics_data")
+  isValidated      Boolean     @default(false) @map("is_validated")
+  validationScore  Int?        @map("validation_score")
+  validationIssues Json?       @map("validation_issues")
+  createdAt        DateTime    @default(now()) @map("created_at")
+  updatedAt        DateTime    @updatedAt @map("updated_at")
+  process          Process     @relation(fields: [processId], references: [id], onDelete: Cascade)
 
   @@index([processId, criteria])
   @@map("criteria_evidences")
 }
 
 model RecommendationLetter {
-  id              String   @id @default(uuid())
-  processId       String   @map("process_id")
-  
-  // Informações do recomendador
-  recommenderName String   @map("recommender_name")
-  recommenderTitle String  @map("recommender_title")
-  recommenderOrg  String?  @map("recommender_org")
-  recommenderEmail String? @map("recommender_email")
-  
-  // Conteúdo
-  content         String?  @db.Text
-  status          String   @default("draft") // draft | review | final | signed
-  
-  // Relações
-  process         Process  @relation(fields: [processId], references: [id], onDelete: Cascade)
-  
-  // Timestamps
-  createdAt       DateTime @default(now()) @map("created_at")
-  updatedAt       DateTime @updatedAt @map("updated_at")
+  id               String   @id @default(uuid())
+  processId        String   @map("process_id")
+  recommenderName  String   @map("recommender_name")
+  recommenderTitle String   @map("recommender_title")
+  recommenderOrg   String?  @map("recommender_org")
+  recommenderEmail String?  @map("recommender_email")
+  content          String?
+  status           String   @default("draft")
+  createdAt        DateTime @default(now()) @map("created_at")
+  updatedAt        DateTime @updatedAt @map("updated_at")
+  process          Process  @relation(fields: [processId], references: [id], onDelete: Cascade)
 
   @@index([processId])
   @@map("recommendation_letters")
 }
 
-// ============================================
-// AUDIT LOG (Rastreamento de ações)
-// ============================================
-
 model AuditLog {
-  id          String   @id @default(uuid())
-  userId      String   @map("user_id")
-  action      String   // "task.created", "upload.deleted", etc
-  entityType  String   @map("entity_type") // "task", "upload", "criteria"
-  entityId    String   @map("entity_id")
-  
-  // Dados antes/depois (para rollback se necessário)
-  before      Json?
-  after       Json?
-  
-  // Metadata
-  ipAddress   String?  @map("ip_address")
-  userAgent   String?  @map("user_agent")
-  
-  // Timestamp
-  createdAt   DateTime @default(now()) @map("created_at")
+  id         String   @id @default(uuid())
+  userId     String   @map("user_id")
+  action     String
+  entityType String   @map("entity_type")
+  entityId   String   @map("entity_id")
+  before     Json?
+  after      Json?
+  ipAddress  String?  @map("ip_address")
+  userAgent  String?  @map("user_agent")
+  createdAt  DateTime @default(now()) @map("created_at")
 
   @@index([userId, createdAt])
   @@index([entityType, entityId])
   @@map("audit_logs")
+}
+
+enum ProcessPhase {
+  ELIGIBILITY
+  EVIDENCE
+  LETTERS
+  PETITION
+  FILING
+}
+
+enum TaskStatus {
+  PENDING
+  IN_PROGRESS
+  UNDER_REVIEW
+  COMPLETED
+  WITH_UPLOAD
+  BLOCKED
+}
+
+enum EB1Criteria {
+  AWARDS
+  MEMBERSHIP
+  PRESS
+  JUDGING
+  ORIGINAL
+  SCHOLARLY
+  CRITICAL
+  HIGH_SALARY
+  EXHIBITIONS
+  COMMERCIAL_SUCCESS
 }
