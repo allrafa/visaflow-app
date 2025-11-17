@@ -55,7 +55,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     try {
       await authSignOut();
       setUser(null);
-      router.push('/login');
+      router.push('/auth/login');
       router.refresh();
     } catch (error) {
       console.error('Failed to sign out:', error);
