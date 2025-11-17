@@ -49,8 +49,8 @@ export async function POST(request: NextRequest) {
       action: 'CRITERIA_CREATED',
       entityType: 'criteria',
       entityId: criteria.id,
-      entityName: `${criteria.criteriaType} - ${criteria.subsection}`,
-      description: `${user.email} adicionou o critério: ${criteria.criteriaType} - ${criteria.subsection}`,
+      entityName: `${criteria.criteria}`,
+      description: `${user.email} adicionou o critério: ${criteria.criteria}`,
     });
 
     return NextResponse.json(criteria, { status: 201 });

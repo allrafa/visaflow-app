@@ -56,8 +56,8 @@ export async function PATCH(
         action: 'CRITERIA_VALIDATED',
         entityType: 'criteria',
         entityId: id,
-        entityName: `${criteria.criteriaType} - ${criteria.subsection}`,
-        description: `${user.email} validou o critério: ${criteria.criteriaType} - ${criteria.subsection}`,
+        entityName: `${criteria.criteria}`,
+        description: `${user.email} validou o critério: ${criteria.criteria}`,
         metadata: { validationScore: validated.validationScore },
       });
     } else {
@@ -69,8 +69,8 @@ export async function PATCH(
         action: 'CRITERIA_UPDATED',
         entityType: 'criteria',
         entityId: id,
-        entityName: `${criteria.criteriaType} - ${criteria.subsection}`,
-        description: `${user.email} atualizou o critério: ${criteria.criteriaType} - ${criteria.subsection}`,
+        entityName: `${criteria.criteria}`,
+        description: `${user.email} atualizou o critério: ${criteria.criteria}`,
       });
     }
 
@@ -98,8 +98,8 @@ export async function DELETE(
       action: 'CRITERIA_DELETED',
       entityType: 'criteria',
       entityId: id,
-      entityName: `${criteria.criteriaType} - ${criteria.subsection}`,
-      description: `${user.email} removeu o critério: ${criteria.criteriaType} - ${criteria.subsection}`,
+      entityName: `${criteria.criteria}`,
+      description: `${user.email} removeu o critério: ${criteria.criteria}`,
     });
 
     await deleteCriteria(id);

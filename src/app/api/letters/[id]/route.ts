@@ -42,8 +42,8 @@ export async function PATCH(
     const updated = await updateLetter(id, validated);
 
     // Registrar atividade baseada no status
-    const wasSigned = letter.status !== 'SIGNED' && validated.status === 'SIGNED';
-    const wasSent = letter.status !== 'SENT' && validated.status === 'SENT';
+    const wasSigned = letter.status !== 'signed' && validated.status === 'signed';
+    const wasFinal = letter.status !== 'final' && validated.status === 'final';
 
     if (wasSigned) {
       await logActivity({
@@ -56,16 +56,16 @@ export async function PATCH(
         entityName: letter.recommenderName,
         description: `${user.email} recebeu a carta assinada de ${letter.recommenderName}`,
       });
-    } else if (wasSent) {
+    } else if (wasFinal) {
       await logActivity({
         processId: letter.process.id,
         userId: user.id,
         userName: user.email,
-        action: 'LETTER_SENT',
+        action: 'LETTER_FINALIZED',
         entityType: 'letter',
         entityId: id,
         entityName: letter.recommenderName,
-        description: `${user.email} enviou a carta de recomendação de ${letter.recommenderName}`,
+        description: `${user.email} finalizou a carta de recomendação de ${letter.recommenderName}`,
       });
     } else {
       await logActivity({
